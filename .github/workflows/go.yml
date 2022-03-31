@@ -1,0 +1,41 @@
+name: Verify All The Things
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Go Tools
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.17
+      id: go
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run tests
+      run: make test
+
+    - name: Build API client for Linux (x64)
+      run: make build-cli-linux
+
+    - name: Build API client for Linux (arm64)
+      run: make build-cli-linux-arm
+
+    - name: Build API client for macOS (x64)
+      run: make build-cli-mac
+
+    - name: Build API client for macOS (Apple Silicon)
+      run: make build-cli-mac-arm
+
+    - name: Build API client for Windows (x64)
+      run: make build-cli-win
